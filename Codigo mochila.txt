@@ -1,0 +1,84 @@
+import java.util.*;
+
+//Clase para guardar los datos de cada objeto
+class Objeto {
+
+    String nombre;
+    int valor;
+    int peso;
+
+    // constructor
+    public Objeto(String nombre, int valor, int peso) {
+        this.nombre = nombre;
+        this.valor = valor;
+        this.peso = peso;
+    }
+    // Calcula la relación valor/peso
+    // Esto sirve para saber qué objeto conviene más
+    public double relacion() {
+        return (double) valor / peso;
+    }
+}
+public class MochilaFraccional {
+
+    public static void main( String[] args) {
+        // Capacidad máxima de la mochila
+        int capacidad = 50;
+
+        //lista donde se guardan los objetos
+        ArrayList<Objeto> objetos = new ArrayList<>();
+
+        // objetos disponibles
+        objetos.add(new Objeto("A" , 60, 10));
+        objetos.add(new Objeto("B", 100, 20));
+        objetos.add(new Objeto("C", 120, 30));
+
+        // se ordenan según su relación valor/peso
+        // para tomar primero los más convenientes
+        objetos.sort((o1, o2) ->
+                Double.compare(o2.relacion(), o1.relacion()));
+
+        double valorTotal = 0;
+
+        // Espacio libre que queda en la mochila
+        int capacidadRestante = capacidad;
+
+        System.out.println("Objetos seleccionados:");
+
+        // Recorremos los objetos ya ordenados
+        for (Objeto obj : objetos) {
+
+            // Si ya no hay espacio terminamos
+            if (capacidadRestante == 0)
+                break;
+
+            //si el objeto entra completo
+            if (obj.peso <= capacidadRestante) {
+
+                System.out.println(obj.nombre + " completo");
+                // Se suma todo su valor
+                valorTotal += obj.valor;
+                capacidadRestante -= obj.peso;
+            }
+            else {
+                //calculamos qué parte del objeto entra
+                double fraccion =
+                        (double) capacidadRestante / obj.peso;
+
+                System.out.println(
+                        capacidadRestante + "/" +
+                        obj.peso +
+                        " parte del objeto " +
+                        obj.nombre
+                );
+                // se agrega solo el valor correspondiente a la fraccion
+                valorTotal += obj.valor * fraccion;
+
+                //la mochila ya quedó llena
+                capacidadRestante = 0;
+            }
+        }
+        System.out.println("\nValor total obtenido: "
+                + valorTotal);
+    }
+}
